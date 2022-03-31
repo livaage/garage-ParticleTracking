@@ -4,6 +4,33 @@
 [![codecov](https://codecov.io/gh/rlworkgroup/garage/branch/master/graph/badge.svg)](https://codecov.io/gh/rlworkgroup/garage)
 [![PyPI version](https://badge.fury.io/py/garage.svg)](https://badge.fury.io/py/garage)
 
+
+# Garage for particle tracking 
+This is a fork of garage with particle tracking environments. To get started, follow the below instructions: 
+
+```
+git clone https://github.com/livcms/garage-ParticleTracking
+cd garage 
+pip install -e .
+
+``` 
+## Environments 
+The particle specific environments are in '/src/garage/envs'  
+The particle environments all have particle in their name, and are very similar to each other.  
+
+## Algorithms 
+The algorithms used are in `garage/src/garage/examples/tf`. Any of the algorithms compatible with continous predictions can be used. The file `partilce_DDPG` has been used for testing. 
+
+## Data samples 
+To get access to the files, please email Liv at liv.helen.vage@cern.ch  
+
+
+## Running an experiment
+To run an experiment, choose your algorithm. In this file, change the environment to the one you wish to use. You should now be able to run the reinforcemnet learning by running this script. 
+
+
+Below is the documentation for garage. 
+
 # garage
 
 garage is a toolkit for developing and evaluating reinforcement learning
