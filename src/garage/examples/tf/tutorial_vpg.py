@@ -4,7 +4,7 @@ import numpy as np
 import tensorflow as tf
 
 from garage import EpisodeBatch, log_performance, wrap_experiment
-from garage.envs import PointEnv
+from garage.envs import PointEnv, TestPointEnv
 from garage.experiment.deterministic import set_seed
 from garage.np import discount_cumsum
 from garage.sampler import LocalSampler

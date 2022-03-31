@@ -20,7 +20,8 @@ from garage.tf.algos import TD3
 from garage.tf.policies import ContinuousMLPPolicy
 from garage.tf.q_functions import ContinuousMLPQFunction
 from garage.trainer import TFTrainer
-
+from garage.envs import TestPointEnv
+from garage.envs import normalize
 
 @wrap_experiment(snapshot_mode='last')
 def td3_pendulum(ctxt=None, seed=1):
@@ -40,7 +41,8 @@ def td3_pendulum(ctxt=None, seed=1):
         sampler_batch_size = 250
         num_timesteps = n_epochs * steps_per_epoch * sampler_batch_size
 
-        env = GymEnv('InvertedDoublePendulum-v2')
+        #env = GymEnv('InvertedDoublePendulum-v2')
+        env = normalize(TestPointEnv())
 
         policy = ContinuousMLPPolicy(env_spec=env.spec,
                                      hidden_sizes=[400, 300],
