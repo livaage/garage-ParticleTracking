@@ -18,9 +18,9 @@ scale_r = window_height/27
 
 n_track_hits = 7
 
-rf_file['mc_z'] = np.abs(rf_file['mc_z'].values)*scale_z + 266
+rf_file['mc_z'] = rf_file['mc_z'].values*scale_z + 266
 rf_file['mc_r'] = rf_file['mc_r'].values*scale_r 
-rf_file['pred_z'] = np.abs(rf_file['pred_z'].values)*scale_z + 266
+rf_file['pred_z'] =rf_file['pred_z'].values*scale_z + 266
 rf_file['pred_r'] = rf_file['pred_r'].values*scale_r
 
 
