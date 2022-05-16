@@ -114,24 +114,24 @@ def dummy(dt):
 def on_draw():
     window.clear()
     label.draw()
-    track1.add_point(0.05)
-    if track1.is_finished():
-        track2.add_point(0.05)
-    closing_time()
+    track1.add_point(0.5)
+#    if track1.is_finished():
+#        track2.add_point(0.05)
+#    closing_time()
 
     batch.draw() 
 
-@window.event
-def closing_time(): 
-    if track2.is_finished() ==True: 
-        pyglet.app.exit()
+#@window.event
+#def closing_time(): 
+#    if track2.is_finished() ==True: 
+#        pyglet.app.exit()
 
 def visualise(): 
  
     #breaks without the dummy call, no idea why 
-    pyglet.clock.schedule_interval(dummy, 0.05)
+    pyglet.clock.schedule_interval(dummy, 0.5)
 
-#    if __name__ == '__main__':
+    if __name__ == '__main__':
 
-    pyglet.app.run()
+        pyglet.app.run()
 

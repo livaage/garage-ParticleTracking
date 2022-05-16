@@ -6,12 +6,11 @@ import pandas as pd
 from garage.experiment import Snapshotter
 from garage import rollout, obtain_evaluation_episodes
 import tensorflow as tf # optional, only for TensorFlow as we need a tf.Session
-from garage.envs import InferenceParticleEnvGnnLike, InferenceGnnLike  
-
-
+#from garage.envs import InferenceParticleEnvGnnLike, InferenceGnnLike  
+from garage.envs import ParticleEnvGnnLike
 snapshotter = Snapshotter()
 with tf.compat.v1.Session(): # optional, only for TensorFlow
-    data = snapshotter.load('/home/lhv14/garage/src/garage/examples/tf/data/local/experiment/ddpg_partcile_263')
+    data = snapshotter.load('/home/lhv14/garage/src/garage/examples/tf/data/local/experiment/tutorial_vpg_13')
    # data = snapshotter.load('/home/lhv14/garage/src/garage/examples/tf/data/local/experiment/td3_garage_tf_4')
     policy = data['algo'].policy
     env = data['env']
@@ -55,7 +54,7 @@ with tf.compat.v1.Session(): # optional, only for TensorFlow
     #np.savetxt("test_actions.csv", actions, delimiter=',')
     #np.savetxt("test_observations.csv", observations, delimiter=',')
     #np.savetxt("test_particle_ids.csv", pids, delimiter=',')
-    df = pd.DataFrame({#'particle_id':pids.flatten(), 
+    df = pd.DataFrame({'particle_id':pids.flatten(), 
         'action_z':actions_z, 
         'action_r':actions_r, 
         'actual_action_z': actual_actions_z, 

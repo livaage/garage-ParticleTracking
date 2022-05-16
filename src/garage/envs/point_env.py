@@ -23,7 +23,9 @@ class PointEnv(Environment):
     """
 
     def __init__(self,
-                 goal=np.array((1., 1.), dtype=np.float32),
+                 #goal=np.array((100., 20.), dtype=np.float32),
+                 goal=np.array((4., 4.), dtype=np.float32),
+                 #arena_size=np.array([600., 26.]),
                  arena_size=5.,
                  done_bonus=0.,
                  never_done=False,
@@ -42,12 +44,14 @@ class PointEnv(Environment):
 
         self._point = np.zeros_like(self._goal)
         self._task = {'goal': self._goal}
-        self._observation_space = akro.Box(low=-10,
-                                           high=10,
+        self._observation_space = akro.Box(#low=np.array([-266, 0, -500]),
+                                           #high=np.array([266, 26, 0]),
+                                           low=-5.,
+                                           high=5.,
                                            shape=(3, ),
                                            dtype=np.float32)
-        self._action_space = akro.Box(low=-1,
-                                      high=1,
+        self._action_space = akro.Box(low=-2.,
+                                      high=2.,
                                       shape=(2, ),
                                       dtype=np.float32)
         self._spec = EnvSpec(action_space=self.action_space,
@@ -94,6 +98,8 @@ class PointEnv(Environment):
 
         first_obs = np.concatenate([self._point, (dist, )])
         self._step_cnt = 0
+
+        #print(first_obs, "new")
 
         return first_obs, dict(goal=self._goal)
 

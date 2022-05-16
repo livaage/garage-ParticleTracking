@@ -18,6 +18,13 @@ from garage.envs.particle_env_gnnlike import ParticleEnvGnnLike
 from garage.envs.inference_particle_env_gnnlike import InferenceParticleEnvGnnLike 
 from garage.envs.inference_gnnlike import InferenceGnnLike 
 from garage.envs.one_particle_env import OneParticleEnv
+from garage.envs.particle_point_env import ParticlePointEnv
+from garage.envs.particle_env_gnnlike_position_only import ParticleEnvGnnLikePositionOnly 
+from garage.envs.trackml_env import TrackMLEnv
+from garage.envs.trackml_xyz_env import TrackMLxyzEnv
+from garage.envs.module_trackml_env import ModuleTrackMLEnv
+from garage.envs.seed_env import SeedEnv
+from garage.envs.trackml_env_benchmark import TrackMLEnvBenchmark
 __all__ = [
     'GymEnv',
     'GridWorldEnv',
@@ -37,4 +44,11 @@ __all__ = [
     'InferenceParticleEnvGnnLike',
     'InferenceGnnLike',
     'OneParticleEnv',
+    'ParticlePointEnv',
+    'ParticleEnvGnnLikePositionOnly',
+    'TrackMLEnv',
+    'TrackMLxyzEnv',
+    'ModuleTrackMLEnv',
+    'SeedEnv',
+    'TrackMLEnvBenchmark',
 ]

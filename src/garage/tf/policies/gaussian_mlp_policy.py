@@ -153,12 +153,15 @@ class GaussianMLPPolicy(GaussianMLPModel, Policy):
                                                shape=(None, None,
                                                       self._obs_dim))
         dist, mean, log_std = self.build(state_input).outputs
+
+        print("dist is ", dist)
         self._f_dist = tf.compat.v1.get_default_session().make_callable(
             [
                 dist.sample(seed=deterministic.get_tf_seed_stream()), mean,
                 log_std
             ],
             feed_list=[state_input])
+        print("it was initialised")
 
     @property
     def input_dim(self):

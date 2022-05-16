@@ -15,6 +15,7 @@ from garage.sampler import RaySampler
 from garage.tf.algos import VPG
 from garage.tf.policies import CategoricalMLPPolicy
 from garage.trainer import TFTrainer
+from garage.envs import ModuleTrackMLEnv
 
 
 @wrap_experiment
@@ -30,7 +31,8 @@ def vpg_cartpole(ctxt=None, seed=1):
     """
     set_seed(seed)
     with TFTrainer(snapshot_config=ctxt) as trainer:
-        env = GymEnv('CartPole-v1')
+        #env = GymEnv('CartPole-v1')
+        env = ModuleTrackMLEnv()
 
         policy = CategoricalMLPPolicy(name='policy',
                                       env_spec=env.spec,
@@ -51,7 +53,7 @@ def vpg_cartpole(ctxt=None, seed=1):
                    optimizer_args=dict(learning_rate=0.01, ))
 
         trainer.setup(algo, env)
-        trainer.train(n_epochs=100, batch_size=10000)
+        trainer.train(n_epochs=100, batch_size=1)
 
 
 vpg_cartpole()

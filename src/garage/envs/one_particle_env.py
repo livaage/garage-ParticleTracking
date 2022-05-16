@@ -113,7 +113,8 @@ class OneParticleEnv(Environment):
 
         #self._point = np.zeros_like(self._goal)
         #self._task = {'goal': self._goal}
-        self._observation_space = akro.Box(low=np.array([-266, 0, -100, -10, -np.pi*2, -10]), high=np.array([266, 26, 100, 10, np.pi*2, 10]), dtype=np.float64)
+        #self._observation_space = akro.Box(low=np.array([-266, 0, -100, -10, -np.pi*2, -10, 1]), high=np.array([266, 26, 100, 10, np.pi*2, 10, 7]), dtype=np.float64)
+        self._observation_space = akro.Box(low=np.array([-266, 0, 1]), high=np.array([266, 26, 7]), dtype=np.float64)   
         self._action_space = akro.Box(low=np.array([-150, -4]),
                                       high=np.array([200,20]),
                                       shape=(2, ),
@@ -172,11 +173,11 @@ class OneParticleEnv(Environment):
         #    self.file_counter += 1 
         #    self.event = pd.read_hdf('~/gnnfiles/data/ntuple_PU200_numEvent1000/ntuple_PU200_event'+str(self.file_counter)+'.h5')
         #    print("jumping file")
-        self.event = self.event[self.event['sim_pt'] > 2]
+        #self.event = self.event[self.event['sim_pt'] > 2]
         #subset by the number of hits 
-        nh = self.event.groupby('particle_id').agg('count').iloc[:,0]
+        #nh = self.event.groupby('particle_id').agg('count').iloc[:,0]
         # only pick the pids that has a certain number of hits 
-        self.event = self.event[self.event['particle_id'].isin(np.array(nh[nh > 7].index))]
+        #self.event = self.event[self.event['particle_id'].isin(np.array(nh[nh > 7].index))]
 
         #random_particle_id = random.choice(self.event.particle_id.values)
         random_particle_id = self.event.particle_id.values[0]
@@ -205,22 +206,22 @@ class OneParticleEnv(Environment):
         deta = calc_eta(start_hit.r, start_hit.z) - calc_eta(next_hit.r, next_hit.z)
 
 
-        self.record_z.append(start_hit.z)
-        self.record_r.append(start_hit.r)
-        self.record_z.append(next_hit.z)
-        self.record_r.append(next_hit.r)
-        self.record_reward.append(0)
-        self.record_reward.append(0)
+        #self.record_z.append(start_hit.z)
+        #self.record_r.append(start_hit.r)
+        #self.record_z.append(next_hit.z)
+        #self.record_r.append(next_hit.r)
+        #self.record_reward.append(0)
+        #self.record_reward.append(0)
       
 
         #self.record_file.append(next_hit.r)
         #self.record_pid.append([self.original_pid, self.original_pid])
-        self.record_pid.append(self.original_pid)
-        self.record_pid.append(self.original_pid)
-        self.record_filenumber.append(self.file_counter)
-        self.record_filenumber.append(self.file_counter)
-        self.record_event_counter.append(self.file_counter)
-        self.record_event_counter.append(self.file_counter)
+        #self.record_pid.append(self.original_pid)
+        #self.record_pid.append(self.original_pid)
+        #self.record_filenumber.append(self.file_counter)
+        #self.record_filenumber.append(self.file_counter)
+        #self.record_event_counter.append(self.file_counter)
+        #self.record_event_counter.append(self.file_counter)
 
 
 
@@ -231,7 +232,8 @@ class OneParticleEnv(Environment):
         phi = azimuthal_angle(dx, dy)
 
         
-        observation = np.concatenate((self._point, [dz], [dr], [dphi], [deta]))
+        #observation = np.concatenate((self._point, [dz], [dr], [dphi], [deta], [2]))
+        observation = np.concatenate((self._point, [2]))
         #print(observation)
 
 
@@ -282,27 +284,28 @@ class OneParticleEnv(Environment):
         if self._visualize:
             print(self.render('ascii'))
 
-        other_hits = self.event[self.event['hit_id']!=self.state.hit_id]
+        #other_hits = self.event[self.event['hit_id']!=self.state.hit_id]
         # it's a big search, converting to list from pandas save an order of magnitude in time,a also just search a small part of the df 
-        zlist = other_hits.z.tolist()
-        rlist = other_hits.r.tolist() 
+        #zlist = other_hits.z.tolist()
+        #rlist = other_hits.r.tolist() 
 
-        distances = np.sqrt((zlist-predicted_point[0])**2+(rlist - predicted_point[1])**2) 
-        index = np.argmin(distances)
+        #distances = np.sqrt((zlist-predicted_point[0])**2+(rlist - predicted_point[1])**2) 
+        #index = np.argmin(distances)
         
-        new_hit = other_hits.iloc[index, ] 
+        #new_hit = other_hits.iloc[index, ] 
         #distance_prev_hit = np.sqrt((self.state.r - new_hit.r)**2 + (self.state.z - new_hit.z)**2)
-        distance_prev_hit = [self.state.z - new_hit.z, self.state.r - new_hit.r]
-        mag_dist_prev_hit = np.sqrt(self.state.z-new_hit.z)**2 + (self.state.r-new_hit.r)**2
-        self.previous_state = self.state
-        self.state = new_hit 
+        #distance_prev_hit = [self.state.z - new_hit.z, self.state.r - new_hit.r]
+        #mag_dist_prev_hit = np.sqrt(self.state.z-new_hit.z)**2 + (self.state.r-new_hit.r)**2
+        #self.previous_state = self.state
+        #self.state = new_hit 
 
         # this is dangerous - relies on ordered df! 
-        next_index = self.num_track_hits + 1 
-        if next_index > len(self.original_particle) -1: 
-            next_index = len(self.original_particle) - 1
-        next_hit = self.original_particle.loc[next_index,: ]
-        self.hit_buffer.append([new_hit.x, new_hit.y])
+        #next_index = self.num_track_hits + 1 
+        #if next_index > len(self.original_particle) -1: 
+        #    next_index = len(self.original_particle) - 1
+        #next_hit = self.original_particle.loc[next_index,: ]
+        next_hit = self.original_particle.loc[2,:]
+        #self.hit_buffer.append([new_hit.x, new_hit.y])
 
         #reward given based on how close this new hit was to the next hit in the df 
         #distance = np.sqrt((new_hit.z - next_hit.z)**2 + (new_hit.r - next_hit.r)**2)
@@ -316,46 +319,46 @@ class OneParticleEnv(Environment):
         self.num_track_hits += 1 
         #print(self.num_track_hits)
 
-        dr = self.state.r - self.previous_state.r 
-        dz = self.state.z - self.previous_state.z 
-        dx = self.state.x - self.previous_state.x 
-        dy = self.state.y - self.previous_state.y
-        dphi = calc_dphi(self.state.sim_phi, self.previous_state.sim_phi)
-        deta = calc_eta(self.state.r, self.state.z) - calc_eta(self.previous_state.r, self.previous_state.z)
+        #dr = self.state.r - self.previous_state.r 
+        #dz = self.state.z - self.previous_state.z 
+        #dx = self.state.x - self.previous_state.x 
+        #dy = self.state.y - self.previous_state.y
+        #dphi = calc_dphi(self.state.sim_phi, self.previous_state.sim_phi)
+        #deta = calc_eta(self.state.r, self.state.z) - calc_eta(self.previous_state.r, self.previous_state.z)
 
-        self.dr_buffer.append(dr)
-        self.dz_buffer.append(dz)
-        m = np.mean(self.dr_buffer)/np.mean(self.dz_buffer)
+        #self.dr_buffer.append(dr)
+        #self.dz_buffer.append(dz)
+        #m = np.mean(self.dr_buffer)/np.mean(self.dz_buffer)
 
         #print(dr, dz, dx, dy)
         
-        dip = dip_angle(dr, dz)
-        phi = azimuthal_angle(dx, dy)
-        p = estimate_momentum(self.hit_buffer)
+        #dip = dip_angle(dr, dz)
+        #phi = azimuthal_angle(dx, dy)
+        #p = estimate_momentum(self.hit_buffer)
 
-        self.record_pid.append(self.original_pid)
-        self.record_z.append(predicted_point_z)
-        self.record_r.append(predicted_point_r)
-        self.record_event_counter.append(self.file_counter)
-        self.record_reward.append(reward)
-        self.record_a0.append(a[0])
-        self.record_a1.append(a[1])
-        self.record_filenumber.append(self.file_counter)
+        #self.record_pid.append(self.original_pid)
+        #self.record_z.append(predicted_point_z)
+        #self.record_r.append(predicted_point_r)
+        #self.record_event_counter.append(self.file_counter)
+        #self.record_reward.append(reward)
+        #self.record_a0.append(a[0])
+        #self.record_a1.append(a[1])
+        #self.record_filenumber.append(self.file_counter)
 
         self._step_cnt += 1
         self._total_step_cnt += 1
         #print(self._step_cnt)
 
-        if (self._total_step_cnt ==100000): 
-            print("I will now save the files !!!!!")
-            np.savetxt('g_pids.csv', self.record_pid, delimiter=',')
-            np.savetxt('g_z.csv', self.record_z, delimiter=',')
-            np.savetxt('g_r.csv', self.record_r, delimiter=',')
-            np.savetxt('g_filenumber.csv', self.record_event_counter, delimiter=',')
-            np.savetxt('g_reward.csv', self.record_reward, delimiter=',')
-            np.savetxt('g_a0.csv', self.record_a0, delimiter=',')
-            np.savetxt('g_a1.csv', self.record_a1, delimiter=',')
-            np.savetxt('g_files.csv', self.record_filenumber, delimiter=',')
+        #if (self._total_step_cnt ==10000): 
+        #    print("I will now save the files !!!!!")
+        #    np.savetxt('g_pids.csv', self.record_pid, delimiter=',')
+        #    np.savetxt('g_z.csv', self.record_z, delimiter=',')
+        #    np.savetxt('g_r.csv', self.record_r, delimiter=',')
+        #    np.savetxt('g_filenumber.csv', self.record_event_counter, delimiter=',')
+        #    np.savetxt('g_reward.csv', self.record_reward, delimiter=',')
+        #    np.savetxt('g_a0.csv', self.record_a0, delimiter=',')
+        #    np.savetxt('g_a1.csv', self.record_a1, delimiter=',')
+        #    np.savetxt('g_files.csv', self.record_filenumber, delimiter=',')
 
            # pass 
 
@@ -381,7 +384,8 @@ class OneParticleEnv(Environment):
         #distance_to_prev_hit = new_hit[['r', 'z']] - 
         #[np.mean(self.dz_buffer)]
 
-        observation = np.concatenate((self._point, [dz], [dr], [dphi], [deta]))
+        #observation = np.concatenate((self._point, [dz], [dr], [dphi], [deta], [2+self.num_track_hits]))
+        observation = np.concatenate((self._point, [2+self.num_track_hits]))
         step_type = StepType.get_step_type(
             step_cnt=self._step_cnt,
             max_episode_length=self._max_episode_length,

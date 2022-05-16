@@ -13,7 +13,7 @@ from garage.tf.algos import DQN
 from garage.tf.policies import DiscreteQFArgmaxPolicy
 from garage.tf.q_functions import DiscreteMLPQFunction
 from garage.trainer import TFTrainer
-
+from garage.envs import ModuleTrackMLEnv
 
 @wrap_experiment
 def dqn_cartpole(ctxt=None, seed=1):
@@ -28,12 +28,12 @@ def dqn_cartpole(ctxt=None, seed=1):
     """
     set_seed(seed)
     with TFTrainer(ctxt) as trainer:
-        n_epochs = 10
+        n_epochs = 100
         steps_per_epoch = 10
-        sampler_batch_size = 500
+        sampler_batch_size = 10
         num_timesteps = n_epochs * steps_per_epoch * sampler_batch_size
-        env = GymEnv('CartPole-v0')
-        replay_buffer = PathBuffer(capacity_in_transitions=int(1e4))
+        env = ModuleTrackMLEnv()
+        replay_buffer = PathBuffer(capacity_in_transitions=int(1e2))
         qf = DiscreteMLPQFunction(env_spec=env.spec, hidden_sizes=(64, 64))
         policy = DiscreteQFArgmaxPolicy(env_spec=env.spec, qf=qf)
         exploration_policy = EpsilonGreedyPolicy(env_spec=env.spec,
@@ -56,11 +56,11 @@ def dqn_cartpole(ctxt=None, seed=1):
                    replay_buffer=replay_buffer,
                    sampler=sampler,
                    steps_per_epoch=steps_per_epoch,
-                   qf_lr=1e-4,
-                   discount=1.0,
-                   min_buffer_size=int(1e3),
-                   double_q=True,
-                   n_train_steps=500,
+                   qf_lr=1e-3,
+                   discount=0.99,
+                   min_buffer_size=int(1e1),
+                   double_q=False,
+                   n_train_steps=30,
                    target_network_update_freq=1,
                    buffer_batch_size=32)
 

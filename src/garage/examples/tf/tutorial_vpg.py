@@ -11,6 +11,19 @@ from garage.sampler import LocalSampler
 from garage.tf.policies import GaussianMLPPolicy
 from garage.trainer import TFTrainer
 
+from garage.envs import (
+    ParticleEnvKalman,
+    ParticleEnvSimple,
+    ParticleEnvGnnLike,
+    ParticleEnvGnnLikePositionOnly,
+    OneParticleEnv,
+    TrackMLEnv, 
+    TrackMLxyzEnv, 
+    ModuleTrackMLEnv, 
+    SeedEnv, 
+    TrackMLEnvBenchmark,
+)
+
 
 class SimpleVPG:
     """Simple Vanilla Policy Gradient.
@@ -60,6 +73,7 @@ class SimpleVPG:
         """
         for epoch in trainer.step_epochs():
             samples = trainer.obtain_samples(epoch)
+            #print("samples ", samples)
             log_performance(epoch,
                             EpisodeBatch.from_list(self.env_spec, samples),
                             self._discount)
@@ -77,6 +91,7 @@ class SimpleVPG:
         """
         obs = np.concatenate([path['observations'] for path in samples])
         actions = np.concatenate([path['actions'] for path in samples])
+        #print(actions)
         returns = []
         for path in samples:
             returns.append(discount_cumsum(path['rewards'], self._discount))
@@ -116,7 +131,7 @@ class SimpleVPG:
 
 
 @wrap_experiment
-def tutorial_vpg(ctxt=None):
+def tutorial_vpg(ctxt=None, archive_launch_repo=True):
     """Train VPG with PointEnv environment.
 
     Args:
@@ -126,8 +141,9 @@ def tutorial_vpg(ctxt=None):
     """
     set_seed(100)
     with TFTrainer(ctxt) as trainer:
-        env = PointEnv(max_episode_length=200)
-        policy = GaussianMLPPolicy(env.spec)
+        #env = PointEnv(max_episode_length=200)
+        env = TrackMLEnvBenchmark()
+        policy = GaussianMLPPolicy(env.spec, hidden_sizes=(64, 64), layer_normalization=False)
         sampler = LocalSampler(agents=policy,
                                envs=env,
                                max_episode_length=env.spec.max_episode_length,
